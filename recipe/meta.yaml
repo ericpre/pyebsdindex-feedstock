@@ -1,5 +1,5 @@
 {% set name = "pyebsdindex" %}
-{% set version = "0.1rc2" %}
+{% set version = "0.1.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyebsdindex-{{ version }}.tar.gz
-  sha256: 5a7a5e6ca7ea331160cd3cdaff02e7744c42464cfc8233bb6808449e86c2d0a6
+  sha256: 2c8456b45bf2bf8d152650fc063927d9ebb62a0cbb24836c890e9658b16907ee
 
 build:
   script: {{ PYTHON }} -m pip install . -vv
