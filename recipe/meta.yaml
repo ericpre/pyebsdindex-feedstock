@@ -13,14 +13,18 @@ build:
   number: 0
 
 requirements:
+  build:
+    - python
   host:
     - python
-    - pip
 
 outputs:
   - name: pyebsdindex-base
-    script: {{ PYTHON }} -m pip install . --no-deps -vvv
+    script: install.sh  # [not win]
+    script: install.bat  # [win]
     requirements:
+      build:
+        - python
       host:
         - python
         - pip
@@ -38,6 +42,7 @@ outputs:
         - scipy
     test:
       requires:
+        - pip
         - pytest
       imports:
         - pyebsdindex
@@ -45,27 +50,16 @@ outputs:
         - pyebsdindex.nlpar
         - pyebsdindex.pcopt
       commands:
+        - pip check
         - pytest --pyargs pyebsdindex
 
   - name: pyebsdindex
-    script: {{ PYTHON }} -m pip install . --no-deps -vvv
     requirements:
       host:
         - python
-        - pip
       run:
         - {{ pin_subpackage('pyebsdindex-base', exact=True) }}
         - ray-default
-    test:
-      requires:
-        - pytest
-      imports:
-        - pyebsdindex
-        - pyebsdindex.ebsd_index
-        - pyebsdindex.nlpar
-        - pyebsdindex.pcopt
-      commands:
-        - pytest --pyargs pyebsdindex
 
 about:
   home: https://pyebsdindex.readthedocs.io
