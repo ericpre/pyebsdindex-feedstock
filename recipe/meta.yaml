@@ -22,6 +22,7 @@ outputs:
     requirements:
       host:
         - python
+        - pip
       run:
         - h5py
         - jupyterlab
@@ -49,6 +50,7 @@ outputs:
     requirements:
       host:
         - python
+        - pip
       run:
         - {{ pin_subpackage('pyebsdindex-base', exact=True) }}
         - ray-default
