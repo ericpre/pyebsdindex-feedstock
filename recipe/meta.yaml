@@ -51,7 +51,7 @@ outputs:
         - pyebsdindex.pcopt
       commands:
         - pip check
-        - pytest --pyargs pyebsdindex
+        - pytest --pyargs pyebsdindex -k "not test_index_pats and not test_pc_optimize and not test_pc_optimize_pso"
 
   - name: pyebsdindex
     requirements:
@@ -60,6 +60,18 @@ outputs:
       run:
         - {{ pin_subpackage('pyebsdindex-base', exact=True) }}
         - ray-default
+    test:
+      requires:
+        - pip
+        - pytest
+      imports:
+        - pyebsdindex
+        - pyebsdindex.ebsd_index
+        - pyebsdindex.nlpar
+        - pyebsdindex.pcopt
+      commands:
+        - pip check
+        - pytest --pyargs pyebsdindex -k "not test_index_pats and not test_pc_optimize and not test_pc_optimize_pso"
 
 about:
   home: https://pyebsdindex.readthedocs.io
