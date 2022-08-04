@@ -10,7 +10,6 @@ source:
   sha256: 2c8456b45bf2bf8d152650fc063927d9ebb62a0cbb24836c890e9658b16907ee
 
 build:
-  script: {{ PYTHON }} -m pip install . -vv
   number: 0
 
 requirements:
@@ -20,6 +19,7 @@ requirements:
 
 outputs:
   - name: pyebsdindex-base
+    script: {{ PYTHON }} -m pip install . --no-deps -vvv
     requirements:
       host:
         - python
@@ -48,6 +48,7 @@ outputs:
         - pytest --pyargs pyebsdindex
 
   - name: pyebsdindex
+    script: {{ PYTHON }} -m pip install . --no-deps -vvv
     requirements:
       host:
         - python
