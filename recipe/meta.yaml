@@ -12,38 +12,56 @@ source:
 build:
   script: {{ PYTHON }} -m pip install . -vv
   number: 0
-  skip: true  # [py<38]
-  # Skip macOS until ray-default is available for macOS or the package becomes
-  # an optional dependency of PyEBSDIndex
-  skip: true  # [osx]
 
 requirements:
   host:
-    - pip
     - python
-  run:
-    - h5py
-    - jupyterlab
-    - matplotlib-base
-    - numba
-    - numpy
-    - ocl-icd-system  # [unix]
-    - pyopencl
-    - pyswarms
-    - python
-    - ray-default
-    - scipy
 
-test:
-  requires:
-    - pytest
-  imports:
-    - pyebsdindex
-    - pyebsdindex.ebsd_index
-    - pyebsdindex.nlpar
-    - pyebsdindex.pcopt
-  commands:
-    - pytest --pyargs pyebsdindex
+outputs:
+  - name: pyebsdindex-base
+    requirements:
+      host:
+        - python
+      run:
+        - h5py
+        - jupyterlab
+        - matplotlib-base
+        - numba
+        - numpy
+        - ocl-icd-system  # [unix]
+        - ocl_icd_wrapper_apple  # [osx]
+        - pyopencl
+        - pyswarms
+        - python
+        - scipy
+    test:
+      requires:
+        - pytest
+      imports:
+        - pyebsdindex
+        - pyebsdindex.ebsd_index
+        - pyebsdindex.nlpar
+        - pyebsdindex.pcopt
+      commands:
+        - pytest --pyargs pyebsdindex
+
+  - name: pyebsdindex
+    requirements:
+      host:
+        - python
+      run:
+        - {{ pin_subpackage('pyebsdindex-base', exact=True )}}
+        - ray-default
+    test:
+      requires:
+        - pytest
+      imports:
+        - pyebsdindex
+        - pyebsdindex.ebsd_index
+        - pyebsdindex.nlpar
+        - pyebsdindex.pcopt
+      commands:
+        - pytest --pyargs pyebsdindex
 
 about:
   home: https://pyebsdindex.readthedocs.io
