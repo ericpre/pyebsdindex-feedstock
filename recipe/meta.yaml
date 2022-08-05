@@ -34,7 +34,7 @@ outputs:
         - matplotlib-base
         - numba
         - numpy
-        - ocl-icd-system  # [unix]
+        - ocl-icd-system  # [linux]
         - ocl_icd_wrapper_apple  # [osx]
         - pyopencl
         - pyswarms
