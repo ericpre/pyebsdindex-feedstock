@@ -1,49 +1,75 @@
-{% set name = "pyebsdindex" %}
-{% set version = "0.1rc2" %}
+{% set version = "0.1.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: pyebsdindex-meta
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyebsdindex-{{ version }}.tar.gz
-  sha256: 5a7a5e6ca7ea331160cd3cdaff02e7744c42464cfc8233bb6808449e86c2d0a6
+  fn: pyebsdindex-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/p/pyebsdindex/pyebsdindex-{{ version }}.tar.gz
+  sha256: 2c8456b45bf2bf8d152650fc063927d9ebb62a0cbb24836c890e9658b16907ee
 
 build:
-  script: {{ PYTHON }} -m pip install . -vv
   number: 0
-  skip: true  # [py<38]
-  # Skip macOS until ray-default is available for macOS or the package becomes
-  # an optional dependency of PyEBSDIndex
-  skip: true  # [osx]
 
 requirements:
+  build:
+    - python
   host:
-    - pip
     - python
-  run:
-    - h5py
-    - jupyterlab
-    - matplotlib-base
-    - numba
-    - numpy
-    - ocl-icd-system  # [unix]
-    - pyopencl
-    - pyswarms
-    - python
-    - ray-default
-    - scipy
 
-test:
-  requires:
-    - pytest
-  imports:
-    - pyebsdindex
-    - pyebsdindex.ebsd_index
-    - pyebsdindex.nlpar
-    - pyebsdindex.pcopt
-  commands:
-    - pytest --pyargs pyebsdindex
+outputs:
+  - name: pyebsdindex-base
+    script: install.sh  # [not win]
+    script: install.bat  # [win]
+    requirements:
+      build:
+        - python
+      host:
+        - python
+        - pip
+      run:
+        - h5py
+        - jupyterlab
+        - matplotlib-base
+        - numba
+        - numpy
+        - ocl-icd-system  # [unix]
+        - ocl_icd_wrapper_apple  # [osx]
+        - pyopencl
+        - pyswarms
+        - python
+        - scipy
+    test:
+      requires:
+        - pip
+        - pytest
+      imports:
+        - pyebsdindex
+        - pyebsdindex.ebsd_index
+        - pyebsdindex.nlpar
+        - pyebsdindex.pcopt
+      commands:
+        - pip check
+        - pytest --pyargs pyebsdindex -k "not test_index_pats and not test_pc_optimize and not test_pc_optimize_pso"
+
+  - name: pyebsdindex
+    requirements:
+      host:
+        - python
+      run:
+        - {{ pin_subpackage('pyebsdindex-base', exact=True) }}
+        - ray-default
+    test:
+      requires:
+        - pytest
+      imports:
+        - pyebsdindex
+        - pyebsdindex.ebsd_index
+        - pyebsdindex.nlpar
+        - pyebsdindex.pcopt
+      commands:
+        - pytest --pyargs pyebsdindex -k "not test_index_pats and not test_pc_optimize and not test_pc_optimize_pso"
 
 about:
   home: https://pyebsdindex.readthedocs.io
