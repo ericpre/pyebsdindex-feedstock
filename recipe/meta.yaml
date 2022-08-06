@@ -10,7 +10,7 @@ source:
   sha256: 2c8456b45bf2bf8d152650fc063927d9ebb62a0cbb24836c890e9658b16907ee
 
 build:
-  number: 0
+  number: 1
 
 requirements:
   build:
@@ -34,7 +34,7 @@ outputs:
         - matplotlib-base
         - numba
         - numpy
-        - ocl-icd-system  # [unix]
+        - ocl-icd-system  # [linux]
         - ocl_icd_wrapper_apple  # [osx]
         - pyopencl
         - pyswarms
@@ -54,6 +54,8 @@ outputs:
         - pytest --pyargs pyebsdindex -k "not test_index_pats and not test_pc_optimize and not test_pc_optimize_pso"
 
   - name: pyebsdindex
+    build:
+      skip: true  # [osx]
     requirements:
       host:
         - python
