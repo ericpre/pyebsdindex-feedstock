@@ -29,7 +29,6 @@ outputs:
       run:
         - __{{ target_os }}
         - h5py
-        - jupyterlab
         - matplotlib-base
         - numba
         - numpy
