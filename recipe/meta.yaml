@@ -52,10 +52,13 @@ outputs:
         - pytest --pyargs pyebsdindex -k "not test_index_pats and not test_pc_optimize and not test_pc_optimize_pso"
 
   - name: pyebsdindex
+    build:
+      noarch: python
     requirements:
       host:
         - python >=3.7
       run:
+        - __{{ target_os }}
         - {{ pin_subpackage('pyebsdindex-base', exact=True) }}
         - ray-default  # [not osx]
     test:
