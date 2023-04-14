@@ -10,25 +10,24 @@ source:
   sha256: f0c90afab532e2f015515ed6c4d797a6e97dd772d38855a009f913dd64adb68e
 
 build:
-  number: 0
+  number: 1
+  noarch: python
 
 requirements:
-  build:
-    - python
   host:
     - python
 
 outputs:
   - name: pyebsdindex-base
-    script: install.sh  # [not win]
-    script: install.bat  # [win]
+    build:
+      script: {{ PYTHON }} -m pip install . --no-deps -vv
+      noarch: python
     requirements:
-      build:
-        - python
       host:
-        - python
+        - python >=3.7
         - pip
       run:
+        - __{{ target_os }}
         - h5py
         - jupyterlab
         - matplotlib-base
@@ -54,14 +53,12 @@ outputs:
         - pytest --pyargs pyebsdindex -k "not test_index_pats and not test_pc_optimize and not test_pc_optimize_pso"
 
   - name: pyebsdindex
-    build:
-      skip: true  # [osx]
     requirements:
       host:
-        - python
+        - python >=3.7
       run:
         - {{ pin_subpackage('pyebsdindex-base', exact=True) }}
-        - ray-default
+        - ray-default  # [not osx]
     test:
       requires:
         - pytest
